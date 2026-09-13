@@ -1,0 +1,812 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wordlist 3: Communication — Vocabulary Quiz</title>
+<style>
+:root{
+  --ink:#0B2A33; --deep:#11505E; --teal:#1C7E8C; --signal:#F0A202;
+  --coral:#D9544D; --green:#2E7D57; --mint:#E6F2F1; --paper:#F4F8F8;
+  --line:#C6DBDC; --white:#fff; --muted:#5A7378;
+}
+*{box-sizing:border-box}
+html,body{margin:0;padding:0}
+body{
+  background:var(--paper); color:var(--ink);
+  font-family:"Segoe UI",Roboto,system-ui,-apple-system,Arial,sans-serif;
+  font-size:18px; line-height:1.55;
+}
+.wrap{max-width:960px;margin:0 auto;padding:0 16px 64px}
+
+/* ---------- top bar ---------- */
+.bar{
+  position:sticky;top:0;z-index:50;background:var(--ink);color:#fff;
+  border-bottom:4px solid var(--signal);
+}
+.bar-in{max-width:960px;margin:0 auto;padding:10px 16px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.brand{font-weight:700;font-size:17px;letter-spacing:.2px}
+.brand span{color:var(--signal)}
+.stats{margin-left:auto;display:flex;gap:8px;flex-wrap:wrap}
+.stat{background:rgba(255,255,255,.12);border-radius:999px;padding:4px 13px;font-size:15px;font-weight:600;white-space:nowrap}
+.stat b{color:var(--signal)}
+.pbar{height:6px;background:rgba(255,255,255,.15)}
+.pbar>i{display:block;height:100%;width:0;background:var(--signal);transition:width .35s ease}
+
+/* ---------- generic ---------- */
+h1{font-family:Georgia,"Times New Roman",serif;font-size:2.1rem;line-height:1.2;margin:.6em 0 .2em}
+h2{font-family:Georgia,serif;font-size:1.45rem;margin:1.4em 0 .5em}
+h3{font-size:1.1rem;margin:1.2em 0 .4em}
+.card{background:var(--white);border:1px solid var(--line);border-radius:14px;padding:22px;margin:18px 0;box-shadow:0 1px 0 rgba(11,42,51,.04)}
+.btn{
+  font:inherit;font-weight:700;cursor:pointer;border:none;border-radius:10px;
+  padding:13px 22px;background:var(--deep);color:#fff;transition:transform .08s,background .2s;
+}
+.btn:hover{background:var(--teal)}
+.btn:active{transform:translateY(1px)}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.btn.alt{background:var(--white);color:var(--deep);border:2px solid var(--deep)}
+.btn.alt:hover{background:var(--mint)}
+.btn.gold{background:var(--signal);color:#3B2A00}
+.btn.gold:hover{background:#ffb51f}
+.btn.sm{padding:8px 15px;font-size:15px;border-radius:8px}
+:focus-visible{outline:3px solid var(--signal);outline-offset:2px}
+.hide{display:none !important}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.note{background:var(--mint);border-left:5px solid var(--teal);padding:12px 16px;border-radius:0 10px 10px 0;margin:14px 0}
+.ar{font-family:"Segoe UI",Tahoma,Arial,sans-serif;direction:rtl;font-size:1.1em}
+
+/* ---------- start ---------- */
+.hero{padding:30px 0 6px}
+.kicker{color:var(--teal);font-weight:700;font-size:15px;margin-bottom:6px}
+.lead{font-size:1.12rem;color:var(--muted);max-width:62ch}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:14px;margin:20px 0}
+.tile{background:var(--white);border:1px solid var(--line);border-radius:12px;padding:16px}
+.tile b{display:block;font-size:1.5rem;color:var(--deep)}
+.tile small{color:var(--muted);font-size:14px}
+input[type=text]{
+  font:inherit;padding:12px 14px;border:2px solid var(--line);border-radius:10px;width:100%;
+  background:#fff;color:var(--ink);
+}
+input[type=text]:focus{border-color:var(--teal)}
+label.fld{display:block;font-weight:600;margin:14px 0 6px}
+
+/* ---------- quiz ---------- */
+.qhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px;flex-wrap:wrap;margin-bottom:4px}
+.sectag{background:var(--deep);color:#fff;border-radius:999px;padding:4px 14px;font-size:14px;font-weight:700}
+.qcount{color:var(--muted);font-size:15px;font-weight:600}
+.qtext{font-family:Georgia,serif;font-size:1.25rem;line-height:1.5;margin:14px 0 6px}
+.qsub{color:var(--muted);font-size:15px;margin-bottom:12px}
+.opt{
+  display:block;width:100%;text-align:left;font:inherit;background:#fff;cursor:pointer;
+  border:2px solid var(--line);border-radius:11px;padding:14px 16px;margin:9px 0;transition:.15s;
+}
+.opt:hover:not(:disabled){border-color:var(--teal);background:var(--mint)}
+.opt .lt{display:inline-block;width:28px;height:28px;line-height:26px;text-align:center;border-radius:7px;
+  background:var(--mint);color:var(--deep);font-weight:700;margin-right:10px;font-size:15px}
+.opt.sel{border-color:var(--teal);background:var(--mint)}
+.opt.sel .lt{background:var(--teal);color:#fff}
+.opt.right{border-color:var(--green);background:#E7F5EE}
+.opt.right .lt{background:var(--green);color:#fff}
+.opt.wrong{border-color:var(--coral);background:#FCEBEA}
+.opt.wrong .lt{background:var(--coral);color:#fff}
+.opt:disabled{cursor:default}
+.fb{border-radius:11px;padding:14px 16px;margin:14px 0;font-size:1rem}
+.fb.ok{background:#E7F5EE;border-left:5px solid var(--green)}
+.fb.no{background:#FCEBEA;border-left:5px solid var(--coral)}
+.fb b{display:block;margin-bottom:4px;font-size:1.05rem}
+.hintbox{background:#FFF6E0;border-left:5px solid var(--signal);padding:12px 16px;border-radius:0 10px 10px 0;margin:12px 0}
+.ctx{background:var(--mint);border:1px solid var(--line);border-radius:12px;padding:16px;margin:8px 0 16px}
+.ctx h4{margin:0 0 10px;font-size:1rem;color:var(--deep)}
+table.tbl{width:100%;border-collapse:collapse;font-size:.95rem;background:#fff}
+table.tbl th,table.tbl td{border:1px solid var(--line);padding:9px 11px;text-align:left;vertical-align:top}
+table.tbl th{background:var(--deep);color:#fff;font-weight:600}
+.gap{display:inline-block;min-width:118px;border-bottom:2px solid var(--teal);padding:2px 6px;font-weight:700;color:var(--deep)}
+.gap.active{background:var(--signal);border-radius:6px;border-bottom:2px solid var(--signal);color:#3B2A00}
+.gap.done{color:var(--green);border-bottom-color:var(--green)}
+.spk{background:#fff;border:1px solid var(--line);border-left:5px solid var(--teal);border-radius:0 10px 10px 0;padding:12px 14px;margin:8px 0}
+.spk b{color:var(--deep)}
+.audio-ctl{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-bottom:12px}
+
+/* ---------- glossary ---------- */
+.tabs{display:flex;gap:6px;flex-wrap:wrap;margin:18px 0 4px}
+.tab{font:inherit;font-weight:600;cursor:pointer;border:2px solid var(--line);background:#fff;color:var(--muted);
+  border-radius:999px;padding:8px 18px}
+.tab.on{background:var(--deep);border-color:var(--deep);color:#fff}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px}
+.flip{perspective:1000px;height:160px;cursor:pointer}
+.flip-in{position:relative;width:100%;height:100%;transition:transform .5s;transform-style:preserve-3d}
+.flip.on .flip-in{transform:rotateY(180deg)}
+.face{position:absolute;inset:0;backface-visibility:hidden;border-radius:12px;padding:14px;
+  display:flex;flex-direction:column;justify-content:center;border:1px solid var(--line);overflow:hidden}
+.face.front{background:#fff}
+.face.back{background:var(--deep);color:#fff;transform:rotateY(180deg)}
+.face .w{font-family:Georgia,serif;font-size:1.25rem;font-weight:700}
+.face .p{font-size:13px;color:var(--teal);font-weight:700}
+.face.back .p{color:var(--signal)}
+.face .d{font-size:13.5px;line-height:1.4;margin-top:6px}
+.face .a{font-size:1.15rem;margin-top:6px}
+
+/* ---------- results ---------- */
+.score-ring{font-family:Georgia,serif;font-size:4rem;font-weight:700;color:var(--deep);line-height:1}
+.breakdown{width:100%;border-collapse:collapse;margin-top:10px}
+.breakdown td{padding:8px 6px;border-bottom:1px solid var(--line);font-size:.98rem}
+.meter{height:10px;background:var(--mint);border-radius:99px;overflow:hidden;min-width:110px}
+.meter>i{display:block;height:100%;background:var(--teal)}
+.cert{
+  background:#fff;border:3px double var(--deep);border-radius:8px;padding:36px 28px;text-align:center;margin:20px 0;
+}
+.cert .seal{font-size:3rem}
+.cert h2{font-family:Georgia,serif;font-size:2rem;margin:.2em 0;color:var(--deep)}
+.cert .nm{font-family:Georgia,serif;font-size:2.1rem;border-bottom:2px solid var(--signal);display:inline-block;padding:0 24px 4px;margin:12px 0}
+.rev{border:1px solid var(--line);border-radius:10px;padding:12px 14px;margin:10px 0;background:#fff}
+.rev .tag{font-size:13px;font-weight:700;color:#fff;background:var(--green);border-radius:6px;padding:2px 8px}
+.rev.bad .tag{background:var(--coral)}
+.foot{text-align:center;color:var(--muted);font-size:14px;padding:26px 0 10px;border-top:1px solid var(--line);margin-top:30px}
+
+@media (max-width:620px){
+  body{font-size:17px}
+  h1{font-size:1.65rem}
+  .qtext{font-size:1.12rem}
+  .bar-in{padding:8px 12px}
+  .stat{font-size:13.5px;padding:3px 10px}
+  table.tbl{font-size:.86rem}
+  table.tbl th,table.tbl td{padding:7px}
+  .card{padding:16px}
+}
+@media print{
+  .bar,.tabs,.btn,.noprint{display:none !important}
+  body{background:#fff}
+  .card{border:none;box-shadow:none;page-break-inside:avoid}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;animation:none !important}}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:99}
+</style>
+</head>
+<body>
+
+<div class="bar">
+  <div class="bar-in">
+    <div class="brand">Wordlist 3 <span>·</span> Communication</div>
+    <div class="stats">
+      <div class="stat">Points <b id="sPts">0</b></div>
+      <div class="stat">Correct <b id="sCor">0</b>/50</div>
+      <div class="stat">Badges <b id="sBad">0</b></div>
+    </div>
+  </div>
+  <div class="pbar"><i id="pbar"></i></div>
+</div>
+
+<div class="wrap">
+
+<!-- ========== START ========== -->
+<section id="vStart">
+  <div class="hero">
+    <div class="kicker">B1+ · IELTS Band 6 · 40 words · 50 questions</div>
+    <h1>Communication: the vocabulary test</h1>
+    <p class="lead">Eight sections built the way IELTS tests vocabulary — meaning in context, word families,
+    two-meaning words, listening table completion, speaker matching, paraphrase, word partners and multi-answer questions.
+    Study the words first, or go straight in.</p>
+  </div>
+
+  <div class="grid">
+    <div class="tile"><b>50</b><small>questions, one at a time</small></div>
+    <div class="tile"><b>8</b><small>IELTS-style sections</small></div>
+    <div class="tile"><b>80%</b><small>for your certificate</small></div>
+  </div>
+
+  <div class="card">
+    <label class="fld" for="nm">Your name (it goes on the certificate)</label>
+    <input type="text" id="nm" placeholder="e.g. Mariam Al Hosani" autocomplete="name">
+    <div class="row" style="margin-top:16px">
+      <button class="btn" onclick="startQuiz()">Start the quiz</button>
+      <button class="btn alt" onclick="show('vGloss')">Study the 40 words first</button>
+      <button class="btn alt" onclick="document.getElementById('loadFile').click()">Load saved progress</button>
+      <input type="file" id="loadFile" accept=".json" class="hide" onchange="loadJSON(event)">
+    </div>
+  </div>
+
+  <div class="note">
+    <b>Two things to know.</b> A hint costs you 3 points, so try first and use the hint only when you are stuck.
+    The listening section uses your device's voice — turn the sound on, or use headphones.
+  </div>
+</section>
+
+<!-- ========== GLOSSARY ========== -->
+<section id="vGloss" class="hide">
+  <h1>The 40 words</h1>
+  <p class="lead">Tap a card to turn it over. Use the table view to print the list or save it as a PDF.</p>
+  <div class="tabs noprint">
+    <button class="tab on" id="tabCards" onclick="glossView('cards')">Flip cards</button>
+    <button class="tab" id="tabTable" onclick="glossView('table')">Printable table</button>
+    <button class="tab" onclick="window.print()">Print / save as PDF</button>
+    <button class="tab" onclick="show('vStart')">← Back</button>
+  </div>
+  <div id="glossCards" class="cards" style="margin-top:18px"></div>
+  <div id="glossTable" class="hide" style="margin-top:18px"></div>
+</section>
+
+<!-- ========== QUIZ ========== -->
+<section id="vQuiz" class="hide">
+  <div class="card">
+    <div class="qhead">
+      <span class="sectag" id="qSec"></span>
+      <span class="qcount" id="qCount"></span>
+    </div>
+    <div id="qCtx"></div>
+    <div class="qtext" id="qText"></div>
+    <div class="qsub" id="qSub"></div>
+    <div id="qBody"></div>
+    <div id="qHint"></div>
+    <div id="qFb"></div>
+    <div class="row" style="margin-top:16px">
+      <button class="btn" id="btnCheck" onclick="checkAnswer()">Check answer</button>
+      <button class="btn gold hide" id="btnNext" onclick="nextQ()">Next question</button>
+      <button class="btn alt sm" id="btnHint" onclick="useHint()">Hint (−3 points)</button>
+    </div>
+  </div>
+</section>
+
+<!-- ========== RESULTS ========== -->
+<section id="vRes" class="hide">
+  <div class="card" style="text-align:center">
+    <div id="rEmoji" style="font-size:3rem"></div>
+    <div class="score-ring" id="rScore">0%</div>
+    <div style="color:var(--muted);font-weight:600" id="rRaw">0 out of 50</div>
+    <h2 id="rMsg" style="margin-top:.4em"></h2>
+    <p id="rPts" style="color:var(--muted)"></p>
+  </div>
+
+  <div class="card">
+    <h3 style="margin-top:0">How you did in each section</h3>
+    <table class="breakdown" id="rBreak"></table>
+  </div>
+
+  <div id="rCert"></div>
+
+  <div class="card noprint">
+    <h3 style="margin-top:0">What next</h3>
+    <div class="row">
+      <button class="btn" onclick="showReview()">Review every question</button>
+      <button class="btn alt" onclick="saveJSON()">Download my results (.json)</button>
+      <button class="btn alt" onclick="show('vGloss')">Back to the word list</button>
+      <button class="btn alt" onclick="resetAll()">Start again</button>
+    </div>
+  </div>
+
+  <div id="rReview"></div>
+</section>
+
+<div class="foot">Designed by: Nazila Motahari &nbsp;|&nbsp; Higher Colleges of Technology, Abu Dhabi &nbsp;|&nbsp; B1+ Vocabulary List 3 (Fall) — Communication</div>
+</div>
+
+<canvas id="confetti" class="hide"></canvas>
+
+<script>
+/* ============================================================
+   WORD DATA — 40 words from the HCT B1+ List 3 (Fall)
+   ============================================================ */
+const WORDS=[
+{w:"according to",p:"preposition",ar:"وَفقاً لِـ / حَسَب",d:"As said by someone, or as shown by something",ex:"According to psychologists, too much screen time can have negative effects."},
+{w:"advertise",p:"verb",ar:"يُعلِن / يُروِّج",d:"To tell people about a product so they will buy it; also, to ask publicly for someone you need",ex:"A lot of companies advertise on social media. / My company is advertising for a new receptionist."},
+{w:"attraction",p:"noun",ar:"عامِل جَذب / جاذِبيّة",d:"Something that makes people come to a place or want something",ex:"The attraction of social media is that it is so easy to communicate."},
+{w:"button",p:"noun",ar:"زِرّ",d:"A small object that fastens clothes; also a switch you press",ex:"I lost a button off my shirt. / The home button takes you back to the main screen."},
+{w:"concentrate",p:"verb",ar:"يُرَكِّز",d:"To think hard about one thing and nothing else",ex:"Using your phone in class makes it hard to concentrate."},
+{w:"decision",p:"noun",ar:"قَرار",d:"A choice you make after thinking about the possibilities",ex:"It's a hard decision — Instagram or Snapchat."},
+{w:"depressed",p:"adjective",ar:"مُكتَئِب",d:"Very sad, often for a long time",ex:"Looking at other people's pictures can make you depressed."},
+{w:"display",p:"noun / verb",ar:"عَرْض / شاشة / يَعرِض",d:"A collection of things for people to look at; the screen of a device; to arrange something so people can see it",ex:"I like the display of phones in the Apple store. / I can't see the display on your phone."},
+{w:"doubt",p:"noun",ar:"شَكّ",d:"A feeling of being uncertain, or of not trusting something",ex:"People have doubts that social media companies are careful with your data."},
+{w:"embarrassed",p:"adjective",ar:"مُحرَج / خَجِل",d:"Feeling ashamed or shy",ex:"Some people are too embarrassed to put their pictures on social media."},
+{w:"embarrassing",p:"adjective",ar:"مُحرِج",d:"Making you feel embarrassed",ex:"I walked into a door and everyone laughed. It was so embarrassing."},
+{w:"exhibition",p:"noun",ar:"مَعرِض",d:"An event where things such as paintings or technology are shown to the public",ex:"Gitex is an annual exhibition of new technology in Dubai."},
+{w:"expect",p:"verb",ar:"يَتَوَقَّع",d:"To think that something will happen",ex:"I can't talk — I'm expecting an important call."},
+{w:"friendship",p:"noun",ar:"صَداقة",d:"A relationship between friends",ex:"You can make international friendships on social media."},
+{w:"gain",p:"verb",ar:"يَكتَسِب / يَزداد",d:"To get something good; also, to increase",ex:"Summer jobs help you gain experience. / He's gained followers in the last few months."},
+{w:"issue",p:"noun",ar:"قَضِيّة / مَسألة",d:"An important subject or problem that people are talking about",ex:"The effects of social media are important issues today."},
+{w:"lock",p:"noun / verb",ar:"قُفل / يُقفِل",d:"The thing you close a door with using a key; to fasten something with a key",ex:"I lost the key to my lock. / I closed the door and locked it."},
+{w:"media",p:"noun",ar:"وَسائِل الإعلام",d:"Newspapers, TV, radio and the internet, thought of as one group",ex:"Social media started about 15 years ago, so it's quite new."},
+{w:"particularly",p:"adverb",ar:"خُصوصاً / بِشَكل خاص",d:"Especially",ex:"I get most news from social media, particularly Twitter."},
+{w:"persuade",p:"verb",ar:"يُقنِع",d:"To make someone agree to do something by talking to them",ex:"Companies use attractive images to persuade you to buy."},
+{w:"poem",p:"noun",ar:"قَصيدة",d:"A piece of writing with short lines, often with rhyme",ex:"Sheikh Mohamed wrote a poem about his son's wedding."},
+{w:"poetry",p:"noun",ar:"شِعر",d:"Poems in general (uncountable)",ex:"Sheikh Mohamed writes poetry."},
+{w:"political",p:"adjective",ar:"سِياسيّ",d:"Relating to politics and government",ex:"There are a lot of political problems in that country."},
+{w:"publish",p:"verb",ar:"يَنشُر",d:"To prepare and print or release something so people can read or buy it",ex:"She made an app and published it in the Apple store."},
+{w:"reader",p:"noun",ar:"قارِئ / كِتاب قِراءة مُبَسَّط",d:"Someone who reads; also a simple book for language learners",ex:"Think about your reader. / There are readers at different levels in the library."},
+{w:"realistic",p:"adjective",ar:"واقِعيّ",d:"Showing things as they really are, or seeming real",ex:"The graphics in the new game are very realistic."},
+{w:"recording",p:"noun",ar:"تَسجيل",d:"Sound or moving pictures that have been recorded",ex:"The students made a recording of themselves speaking."},
+{w:"regret",p:"verb",ar:"يَندَم على",d:"To feel sorry about something you did",ex:"I regret staying up late playing games."},
+{w:"regular",p:"adjective",ar:"مُنتَظِم / قِياسيّ",d:"Happening often at the same time; following the usual grammar pattern; standard size",ex:"We're on a regular schedule. / 'Talk' is a regular verb. / My laptop is a regular size."},
+{w:"regularly",p:"adverb",ar:"بِانتِظام",d:"At the same time each day or week; often",ex:"She regularly posts pictures on Instagram."},
+{w:"relatively",p:"adverb",ar:"نِسبِيّاً",d:"Fairly, when you compare it with other things",ex:"Phone cameras are relatively easy to use."},
+{w:"remind",p:"verb",ar:"يُذَكِّر",d:"To make someone remember something",ex:"I use my phone calendar to remind me about things."},
+{w:"search",p:"noun / verb",ar:"بَحث / يَبحَث",d:"Looking for information on a computer, or trying to find something",ex:"I did a Google search. / I lost my phone and searched for it everywhere."},
+{w:"secret",p:"noun / adjective",ar:"سِرّ / سِرّيّ",d:"Something you tell no one; not allowed to be known by others",ex:"Don't tell anyone — it's a secret. / Keep your passwords secret."},
+{w:"secretly",p:"adverb",ar:"سِرّاً",d:"In a secret way",ex:"Secretly recording people is illegal in the UAE."},
+{w:"situation",p:"noun",ar:"وَضع / مَوقِف",d:"The set of things happening at a particular time and place",ex:"He's in a difficult situation — text or call?"},
+{w:"style",p:"noun",ar:"أُسلوب / طِراز",d:"A way of doing something typical of a person or period; a way of designing clothes, hair, etc.",ex:"You can write in different styles with different fonts."},
+{w:"system",p:"noun",ar:"نِظام",d:"A set of connected pieces of equipment that work together",ex:"They have a new sound system which is very loud."},
+{w:"unlikely",p:"adjective",ar:"مِن غَير المُرَجَّح",d:"Not expected to happen",ex:"Technology is developing quickly and that's unlikely to change."},
+{w:"western",p:"adjective",ar:"غَربيّ",d:"In or from the west of an area; or relating to North America and Western Europe",ex:"Al Ruwais is in the western UAE. / Some young people are interested in western culture."}
+];
+
+/* ============================================================
+   LISTENING SCRIPT + TABLE
+   ============================================================ */
+const LISTEN_SCRIPT =
+"Good morning. Here are the results of our student media survey. First, Instagram. "+
+"Students open it regularly — that means every single day, usually in the evening. "+
+"The problem they reported most often is that it is hard to concentrate on study when the app is open. "+
+"Second, WhatsApp. Here the main use is keeping friendships going with people who live abroad. "+
+"But the problem they mentioned was that it is very easy to send a message quickly and then regret it later. "+
+"Third, news websites. Most students said they follow political news on these sites, "+
+"particularly news about this region. And the biggest problem? "+
+"Many of them have doubts about whether the information they read is true. Thank you.";
+
+const LISTEN_GAPS=[
+ {ans:"regularly",acc:["regularly"]},
+ {ans:"concentrate",acc:["concentrate"]},
+ {ans:"friendships",acc:["friendships","friendship"]},
+ {ans:"regret",acc:["regret"]},
+ {ans:"political",acc:["political"]},
+ {ans:"particularly",acc:["particularly"]},
+ {ans:"doubts",acc:["doubts","doubt"]}
+];
+
+function listenTable(active){
+  const g=i=>{
+    const st=STATE.answers[LISTEN_START+i];
+    const cls = i===active ? "gap active" : (st&&st.correct ? "gap done" : "gap");
+    const txt = i===active ? "…" : (st&&st.given ? st.given : "…");
+    return '<span class="'+cls+'">'+(i+1)+'. '+txt+'</span>';
+  };
+  return '<div class="ctx"><h4>Student Media Survey — summary table</h4>'+
+  '<p style="margin:0 0 8px;font-size:14.5px;color:var(--muted)">Write <b>ONE WORD</b> in each gap.</p>'+
+  '<table class="tbl"><tr><th>Platform</th><th>How students use it</th><th>Problem reported</th></tr>'+
+  '<tr><td>Instagram</td><td>They open it '+g(0)+' — every day</td><td>Hard to '+g(1)+' on study</td></tr>'+
+  '<tr><td>WhatsApp</td><td>Keeping '+g(2)+' going with people abroad</td><td>They later '+g(3)+' sending a quick message</td></tr>'+
+  '<tr><td>News websites</td><td>Following '+g(4)+' news, '+g(5)+' about this region</td><td>They have '+g(6)+' about what is true</td></tr>'+
+  '</table></div>';
+}
+
+const SPEAKERS='<div class="ctx"><h4>Three students talk about their phones</h4>'+
+'<div class="spk"><b>A — Hessa:</b> "I post regularly, but I keep my account secret from people at work. I only share with close friends."</div>'+
+'<div class="spk"><b>B — Omar:</b> "I don\'t really advertise my life online. I use my phone to search for information, particularly for my studies, and to remind me about deadlines."</div>'+
+'<div class="spk"><b>C — Layla:</b> "I published my first poem on a blog last year. Now I have readers in four countries, and I\'ve gained a lot of confidence."</div>'+
+'</div>';
+
+/* ============================================================
+   QUESTION BANK — 50
+   type: mcq | text | multi
+   ============================================================ */
+const SECTIONS=[
+ "Meaning in context","Word families","Two jobs, one word","Listening: table completion",
+ "Who said what?","Paraphrase match","Word partners","Choose TWO letters"
+];
+
+const Q=[
+/* ---- 1. Meaning in context (8) ---- */
+{s:0,type:"mcq",q:"According to the college report, students check their phones more than 100 times a day.",sub:"What does <b>according to</b> tell the reader?",o:["This is the writer's own opinion.","This information came from another source.","This is a guess about the future.","This is a comparison of two colleges."],a:1,h:"Look at where the information comes from — the report, not the writer.",e:"<b>According to</b> introduces information that somebody else said or that another source shows. IELTS writers use it constantly to report research."},
+{s:0,type:"mcq",q:"My company is advertising for a new receptionist.",sub:"What is the company doing?",o:["Selling a receptionist service.","Asking people to apply for a job.","Training its receptionists.","Complaining about its receptionist."],a:1,h:"<i>Advertise</i> + <i>for</i> has a special meaning.",e:"<b>Advertise for</b> someone = put information in a newspaper or online asking for the person you need. Without <i>for</i>, <i>advertise</i> means to tell people about a product."},
+{s:0,type:"mcq",q:"The main attraction of podcasts is that you can listen while you drive.",sub:"What does <b>attraction</b> mean here?",o:["A difficulty you have to accept.","A place tourists visit.","The quality that makes people want it.","The price you pay for it."],a:2,h:"What makes people choose podcasts instead of something else?",e:"An <b>attraction</b> is the thing that pulls people towards something — a place, a product or an idea."},
+{s:0,type:"mcq",q:"Students find it hard to concentrate when notifications keep appearing.",sub:"<b>Concentrate</b> means…",o:["to finish work quickly","to give all your attention to one thing","to remember facts for a test","to study with other people"],a:1,h:"Think about what a notification interrupts.",e:"<b>Concentrate on</b> something = think very hard about that one thing and nothing else. Note the preposition: concentrate <i>on</i> your work."},
+{s:0,type:"mcq",q:"There is some doubt about whether the photograph is real.",sub:"<b>Doubt</b> is closest in meaning to…",a:2,o:["proof","certainty","a feeling of not being sure","an argument between people"],h:"It is the opposite of one of the other options.",e:"<b>Doubt</b> = being uncertain, or not trusting something. It is the opposite of <i>certainty</i>. Common phrase: <i>I have my doubts about…</i>"},
+{s:0,type:"mcq",q:"Gitex is an annual exhibition of new technology in Dubai.",sub:"An <b>exhibition</b> is…",o:["a competition between companies","a public event where things are shown","a training course for workers","a sale of second-hand equipment"],a:1,h:"Think about a museum or a technology show.",e:"An <b>exhibition</b> is an event where paintings, products or ideas are put in front of the public. The related verb is <i>display</i>."},
+{s:0,type:"mcq",q:"The effect of screen time on sleep is an important issue for young people.",sub:"Here, <b>issue</b> means…",o:["a solution that has been found","a subject or problem people are discussing","a scientific law","a piece of equipment"],a:1,h:"Newspapers talk about the big ____ of our time.",e:"An <b>issue</b> is an important subject or problem that people talk about. In IELTS Writing Task 2 you will often see <i>a controversial issue</i>."},
+{s:0,type:"mcq",q:"It is unlikely that printed newspapers will disappear completely.",sub:"<b>Unlikely</b> means…",o:["certain to happen","probably will not happen","has already happened","is happening right now"],a:1,h:"The prefix <i>un-</i> makes it negative.",e:"<b>Unlikely</b> = not expected to happen. Writers use it to make a careful prediction instead of a strong claim."},
+
+/* ---- 2. Word families (8) ---- */
+{s:1,type:"text",q:"She posts photos ________ — usually every single evening.",sub:"Write the correct form of <b>regular</b>.",a:"regularly",acc:["regularly"],h:"You need the adverb form. It describes <i>how often</i> she posts.",e:"<b>regular</b> (adjective) → <b>regularly</b> (adverb). The word describes the verb <i>posts</i>, so it must be an adverb."},
+{s:1,type:"text",q:"He ________ recorded the meeting on his phone, and nobody knew.",sub:"Write the correct form of <b>secret</b>.",a:"secretly",acc:["secretly"],h:"It describes <i>how</i> he recorded it.",e:"<b>secret</b> (noun / adjective) → <b>secretly</b> (adverb). Remember: <i>secretly recording people is illegal in the UAE</i>."},
+{s:1,type:"text",q:"I was so ________ when my video call started before I was ready.",sub:"Write the correct form of <b>embarrass</b>. It describes <u>how the person feels</u>.",a:"embarrassed",acc:["embarrassed"],h:"-ed for the feeling, -ing for the cause.",e:"<b>embarrassed</b> = how a person feels. <b>embarrassing</b> = the thing that causes the feeling. This -ed / -ing pair is tested in almost every B1 exam."},
+{s:1,type:"text",q:"Walking into a door while looking at your phone is very ________.",sub:"Write the correct form of <b>embarrass</b>. It describes <u>the situation</u>.",a:"embarrassing",acc:["embarrassing"],h:"The situation causes the feeling, so use -ing.",e:"The <i>situation</i> is <b>embarrassing</b>; the <i>person</i> is <b>embarrassed</b>."},
+{s:1,type:"text",q:"He writes ________ as well as short stories; his best-known poem is about the desert.",sub:"Write the correct form of <b>poem</b> — poems in general.",a:"poetry",acc:["poetry"],h:"One piece = a poem. All of it together = ?",e:"<b>poem</b> is countable (one poem, two poems). <b>poetry</b> is uncountable and means poems in general."},
+{s:1,type:"text",q:"Social media can turn a short chat into a long ________.",sub:"Write the noun form of <b>friend</b>.",a:"friendship",acc:["friendship"],h:"The suffix -ship makes a noun about a relationship.",e:"<b>friend</b> → <b>friendship</b>. The suffix <i>-ship</i> also gives us <i>relationship</i>, <i>partnership</i>, <i>membership</i>."},
+{s:1,type:"text",q:"When you write, always think about your ________.",sub:"Write the noun for <u>the person who reads</u>.",a:"reader",acc:["reader"],h:"Add the person suffix to <i>read</i>.",e:"<b>read</b> → <b>reader</b>. The suffix <i>-er</i> makes the person who does the action: <i>writer, speaker, listener, reader</i>."},
+{s:1,type:"text",q:"The country has serious ________ problems, so the government is weak.",sub:"Write the adjective form of <b>politics</b>.",a:"political",acc:["political"],h:"The adjective ends in -al.",e:"<b>politics</b> (noun) → <b>political</b> (adjective) → <i>politically</i> (adverb). Watch the spelling: politic<b>al</b>, not politic."},
+
+/* ---- 3. Two jobs, one word (6) ---- */
+{s:2,type:"mcq",q:"In which sentence does <b>display</b> mean “the screen of a device”?",sub:"",o:["There were family photographs displayed on his desk.","I can't see the display on your phone — it's too dark.","The store has a wonderful display of new laptops."],a:1,h:"Only one sentence is about a piece of electronic equipment.",e:"<b>display</b> has three uses on your list: a collection of things to look at (noun), a screen (noun), and to arrange something so people can see it (verb)."},
+{s:2,type:"mcq",q:"In which sentence is <b>lock</b> a verb?",sub:"",o:["I lost the key to my lock.","She locked her phone before putting it in her bag.","The lock on the door is broken."],a:1,h:"A verb shows an action. Look for the -ed ending.",e:"<i>Locked</i> is the past of the verb <b>lock</b>. In the other two sentences, <i>lock</i> is the object you open with a key."},
+{s:2,type:"mcq",q:"In which sentence does <b>gain</b> mean “to increase in number”?",sub:"",o:["Part-time jobs help you gain work experience.","His channel gained 5,000 subscribers in one week.","She gained a place at a good university."],a:1,h:"Look for a number.",e:"<b>gain</b> = (1) to get something good, (2) to increase. With a number after it, it almost always means <i>increase</i>."},
+{s:2,type:"mcq",q:"After a long <b>search</b>, he found his phone under the sofa.",sub:"In this sentence, <b>search</b> is…",o:["a verb meaning to look for something","a noun meaning an attempt to find something","a noun meaning the use of the internet"],a:1,h:"What comes before it? <i>a long…</i>",e:"<i>a long search</i> — the article <i>a</i> and the adjective <i>long</i> tell you this is a noun. It is not about the internet here."},
+{s:2,type:"mcq",q:"“Talk” is a <b>regular</b> verb but “go” is not.",sub:"Here, <b>regular</b> means…",o:["happening often at the same time","following the usual pattern","of a standard size"],a:1,h:"Think about grammar, not time.",e:"<b>regular</b> has three meanings on your list. In grammar it means the word follows the usual pattern: talk → talked. <i>Go → went</i> is irregular."},
+{s:2,type:"mcq",q:"Some young people in Asia are interested in <b>western</b> culture.",sub:"Here, <b>western</b> means…",o:["in the west part of an area","relating to North America and Western Europe","a type of old cowboy film"],a:1,h:"Culture, not geography inside one country.",e:"<b>western</b> = (1) in the west of an area (<i>the western UAE</i>), (2) connected with North America and Western Europe (<i>western culture</i>)."},
+
+/* ---- 4. Listening: table completion (7) ---- */
+{s:3,type:"text",listen:0,q:"Gap 1 — Instagram: “They open it ________ — every day.”",sub:"Write ONE WORD.",a:"regularly",acc:["regularly"],h:"An adverb that means <i>often, at the same time each day</i>.",e:"The speaker says students open it <b>regularly</b> — and then explains it: <i>that means every single day</i>."},
+{s:3,type:"text",listen:1,q:"Gap 2 — Instagram problem: “Hard to ________ on study.”",sub:"Write ONE WORD.",a:"concentrate",acc:["concentrate"],h:"The verb goes with the preposition <i>on</i>.",e:"<b>concentrate on</b> — the preposition after the gap is a strong clue in IELTS listening."},
+{s:3,type:"text",listen:2,q:"Gap 3 — WhatsApp: “Keeping ________ going with people abroad.”",sub:"Write ONE WORD.",a:"friendships",acc:["friendships","friendship"],h:"A noun made from <i>friend</i>. Plural here.",e:"<b>friendships</b>. In IELTS listening, listen for the -s: <i>keeping friendships going</i>."},
+{s:3,type:"text",listen:3,q:"Gap 4 — WhatsApp problem: “They later ________ sending a quick message.”",sub:"Write ONE WORD.",a:"regret",acc:["regret"],h:"To feel sorry about something you did.",e:"<b>regret</b> + <i>-ing</i>: <i>regret sending, regret posting, regret saying</i>."},
+{s:3,type:"text",listen:4,q:"Gap 5 — News websites: “Following ________ news.”",sub:"Write ONE WORD.",a:"political",acc:["political"],h:"An adjective about government.",e:"<b>political</b> news — the adjective comes before the noun <i>news</i>."},
+{s:3,type:"text",listen:5,q:"Gap 6 — News websites: “________ news about this region.”",sub:"Write ONE WORD.",a:"particularly",acc:["particularly"],h:"A long adverb that means <i>especially</i>.",e:"<b>particularly</b> = especially. Speakers use it to narrow a general statement to one example."},
+{s:3,type:"text",listen:6,q:"Gap 7 — News websites problem: “They have ________ about what is true.”",sub:"Write ONE WORD.",a:"doubts",acc:["doubts","doubt"],h:"A noun meaning <i>not being sure</i>.",e:"<b>doubts</b> — the phrase is <i>have doubts about something</i>."},
+
+/* ---- 5. Who said what? (5) ---- */
+{s:4,type:"mcq",spk:1,q:"Which student uses the internet mainly to find information?",sub:"",o:["A — Hessa","B — Omar","C — Layla"],a:1,h:"Look for the verb <i>search</i>.",e:"Omar says he uses his phone to <b>search</b> for information, <i>particularly</i> for his studies."},
+{s:4,type:"mcq",spk:1,q:"Which student keeps part of their online life private?",sub:"",o:["A — Hessa","B — Omar","C — Layla"],a:0,h:"Look for the adjective <i>secret</i>.",e:"Hessa keeps her account <b>secret</b> from people at work — she shares only with close friends."},
+{s:4,type:"mcq",spk:1,q:"Which student has become more confident because of their writing?",sub:"",o:["A — Hessa","B — Omar","C — Layla"],a:2,h:"Look for <i>gained</i> + a feeling.",e:"Layla <b>published</b> a poem and says she has <b>gained</b> a lot of confidence."},
+{s:4,type:"mcq",spk:1,q:"Which student uses technology to remember tasks?",sub:"",o:["A — Hessa","B — Omar","C — Layla"],a:1,h:"Look for <i>remind</i>.",e:"Omar uses his phone to <b>remind</b> him about deadlines."},
+{s:4,type:"mcq",spk:1,q:"Which student has an audience outside their own country?",sub:"",o:["A — Hessa","B — Omar","C — Layla"],a:2,h:"Look for <i>readers</i> and a place.",e:"Layla says she has <b>readers</b> in four countries. <i>Audience</i> is the paraphrase of <i>readers</i>."},
+
+/* ---- 6. Paraphrase match (6) ---- */
+{s:5,type:"mcq",q:"Companies use famous faces to <b>persuade</b> you to buy their products.",sub:"Which sentence means the same?",o:["Companies force customers to buy things they do not want.","Companies use well-known people to make customers want to buy.","Companies sell their products to famous people first."],a:1,h:"<i>Persuade</i> is about talking someone into something, not forcing them.",e:"<b>persuade</b> = make someone agree by talking to them. It is never forcing — that would be <i>make</i> or <i>force</i>."},
+{s:5,type:"mcq",q:"She <b>regrets</b> posting the video.",sub:"Which sentence means the same?",o:["She is sorry that she posted it.","She has already deleted the video.","She is planning to post it again."],a:0,h:"Regret is a feeling about the past.",e:"<b>regret</b> = feel sorry about something you did. It tells you how she feels, not what she did next."},
+{s:5,type:"mcq",q:"Phone cameras are <b>relatively</b> easy to use.",sub:"Which sentence means the same?",o:["Phone cameras are the easiest cameras ever made.","Compared with other cameras, phone cameras are quite easy.","Phone cameras are difficult at the beginning."],a:1,h:"<i>Relatively</i> always involves a comparison.",e:"<b>relatively</b> = fairly, when you compare it with other things. It softens the claim — it does not say <i>the easiest</i>."},
+{s:5,type:"mcq",q:"The graphics in the new game are very <b>realistic</b>.",sub:"Which sentence means the same?",o:["The graphics look like real life.","The graphics are very colourful.","The graphics load slowly."],a:0,h:"Look at the root of the word.",e:"<b>realistic</b> = showing things as they really are. Careful: <i>a realistic plan</i> means a sensible, possible plan — a second common use."},
+{s:5,type:"mcq",q:"A <b>recording</b> was made of the interview.",sub:"Which sentence means the same?",o:["The interview was written down word for word.","The sound of the interview was captured.","The interview was cancelled at the last minute."],a:1,h:"Think about a microphone, not a pen.",e:"A <b>recording</b> is sound or moving pictures that have been captured. Writing it down would be a <i>transcript</i>."},
+{s:5,type:"mcq",q:"Sorry, I can't talk — I'm <b>expecting</b> an important call.",sub:"Which sentence means the same?",o:["He thinks the call will come soon.","He has already missed the call.","He is asking his manager to call him."],a:0,h:"Expect is about the future, not the past.",e:"<b>expect</b> = think that something will happen. Careful: <i>expect</i> is not <i>wait for</i> and it is not <i>hope</i>."},
+
+/* ---- 7. Word partners (7) ---- */
+{s:6,type:"mcq",q:"It's a hard ________ to make: Instagram or Snapchat?",sub:"Which word goes with <i>make</i>?",o:["decision","doubt","situation","attraction"],a:0,h:"We <i>make</i> one of these, we do not <i>do</i> it.",e:"<b>make a decision</b> — never <i>do a decision</i>. Also: <i>make a choice, take a decision</i> (more formal British English)."},
+{s:6,type:"mcq",q:"I needed information for my project, so I ________ a Google search.",sub:"",o:["made","did","took","gave"],a:1,h:"Think of the fixed phrase used for internet searching.",e:"<b>do a search</b> is the standard collocation. You can also <i>run a search</i>. You do not <i>make</i> a search."},
+{s:6,type:"mcq",q:"After his first presentation he ________ a lot of confidence.",sub:"",o:["won","caught","gained","published"],a:2,h:"You get something good, slowly.",e:"<b>gain confidence / gain experience / gain weight / gain followers</b>. <i>Win</i> needs a competition; <i>catch</i> needs something moving or an illness."},
+{s:6,type:"mcq",q:"Please ________ me to send the file tonight.",sub:"",o:["remember","remind","recall","repeat"],a:1,h:"One of these verbs needs an object — a person.",e:"<b>remind somebody to do something</b>. <i>Remember</i> has no person after it: <i>I remembered to send it</i>."},
+{s:6,type:"mcq",q:"The magazine will ________ her article next month.",sub:"",o:["advertise","display","publish","persuade"],a:2,h:"What do magazines and newspapers do with articles?",e:"<b>publish</b> an article, a book, a photo, an app. <i>Advertise</i> is for products; <i>display</i> is for arranging things to be seen."},
+{s:6,type:"mcq",q:"I get most of my news from social ________.",sub:"",o:["media","medias","medium","mediums"],a:0,h:"This word has no -s plural in this phrase.",e:"<b>social media</b> — always this form. <i>Media</i> is already plural in form, so <i>medias</i> is wrong."},
+{s:6,type:"mcq",q:"He's in a difficult ________ — he isn't sure whether to text or call.",sub:"",o:["system","style","situation","display"],a:2,h:"It describes what is happening to him right now.",e:"<b>a difficult / awkward / similar situation</b>. A <i>system</i> is equipment; a <i>style</i> is a way of doing something."},
+
+/* ---- 8. Choose TWO letters (3 items) ---- */
+{s:7,type:"multi",n:2,q:"Which TWO words describe <u>how a person feels</u>?",sub:"Choose TWO letters.",o:["depressed","embarrassing","embarrassed","realistic","political"],a:[0,2],h:"Feelings usually end in -ed.",e:"<b>depressed</b> and <b>embarrassed</b> describe a person's feeling. <i>Embarrassing</i> describes the thing that causes the feeling, and <i>realistic</i> and <i>political</i> describe things, not feelings."},
+{s:7,type:"multi",n:2,q:"Which TWO things can you <b>publish</b>?",sub:"Choose TWO letters.",o:["an article","a lock","an app","a button","a recording studio"],a:[0,2],h:"Think of things that people read, buy or download.",e:"You can <b>publish an article</b> and <b>publish an app</b> (as in the example: <i>she made an app and published it in the Apple store</i>). Locks and buttons are objects you use, not things you release to the public."},
+{s:7,type:"multi",n:2,q:"Which TWO sentences use <b>secret</b> correctly?",sub:"Choose TWO letters.",o:["Keep your password secret — don't tell anyone.","She told me a secret about her cousin.","He secret the file on his laptop.","That is very secretly information.","The company secret its new phone last week."],a:[0,1],h:"On this list, <i>secret</i> is an adjective and a noun — never a verb.",e:"<b>Secret</b> works as an adjective (<i>keep it secret</i>) and as a noun (<i>tell me a secret</i>). It is not a verb, and <i>secretly</i> is the adverb, so it cannot describe the noun <i>information</i>."}
+];
+
+const LISTEN_START = Q.findIndex(x=>x.s===3);
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const STATE={name:"",i:0,pts:0,correct:0,badges:[],answers:[],hinted:[],plays:0,streak:0,done:false};
+
+const $=id=>document.getElementById(id);
+function show(id){
+  ["vStart","vGloss","vQuiz","vRes"].forEach(v=>$(v).classList.add("hide"));
+  $(id).classList.remove("hide");
+  window.scrollTo({top:0,behavior:"instant"});
+}
+function norm(s){
+  return (s||"").toLowerCase().trim().replace(/[.,!?;:'"()]/g,"").replace(/\s+/g," ");
+}
+function updateBar(){
+  $("sPts").textContent=STATE.pts;
+  $("sCor").textContent=STATE.correct;
+  $("sBad").textContent=STATE.badges.length;
+  $("pbar").style.width=(STATE.i/Q.length*100)+"%";
+}
+
+/* ============================================================
+   GLOSSARY
+   ============================================================ */
+function buildGloss(){
+  $("glossCards").innerHTML=WORDS.map((w,i)=>
+    '<div class="flip" onclick="this.classList.toggle(\'on\')" tabindex="0" onkeydown="if(event.key===\'Enter\'||event.key===\' \'){event.preventDefault();this.classList.toggle(\'on\')}">'+
+      '<div class="flip-in">'+
+        '<div class="face front"><div class="p">'+w.p+'</div><div class="w">'+w.w+'</div><div class="d" style="color:var(--muted);margin-top:8px">Tap to see the meaning</div></div>'+
+        '<div class="face back"><div class="p">'+w.p+'</div><div class="d">'+w.d+'</div><div class="a ar">'+w.ar+'</div></div>'+
+      '</div></div>').join("");
+
+  $("glossTable").innerHTML='<table class="tbl"><tr><th style="width:34px">#</th><th>Word</th><th>Part of speech</th><th>Meaning</th><th>Arabic</th><th>Example</th></tr>'+
+    WORDS.map((w,i)=>'<tr><td>'+(i+1)+'</td><td><b>'+w.w+'</b></td><td>'+w.p+'</td><td>'+w.d+'</td><td class="ar">'+w.ar+'</td><td><i>'+w.ex+'</i></td></tr>').join("")+
+    '</table>';
+}
+function glossView(v){
+  $("glossCards").classList.toggle("hide",v!=="cards");
+  $("glossTable").classList.toggle("hide",v!=="table");
+  $("tabCards").classList.toggle("on",v==="cards");
+  $("tabTable").classList.toggle("on",v==="table");
+}
+
+/* ============================================================
+   QUIZ FLOW
+   ============================================================ */
+function startQuiz(){
+  STATE.name=$("nm").value.trim()||"Student";
+  show("vQuiz"); renderQ();
+}
+
+function renderQ(){
+  const q=Q[STATE.i];
+  $("qSec").textContent=SECTIONS[q.s];
+  $("qCount").textContent="Question "+(STATE.i+1)+" of "+Q.length;
+  $("qText").innerHTML=q.q;
+  $("qSub").innerHTML=q.sub||"";
+  $("qFb").innerHTML="";
+  $("qHint").innerHTML="";
+  $("btnCheck").classList.remove("hide");
+  $("btnNext").classList.add("hide");
+  $("btnHint").classList.remove("hide");
+  $("btnHint").disabled=false;
+
+  // context block
+  let ctx="";
+  if(q.listen!==undefined){
+    ctx='<div class="audio-ctl">'+
+        '<button class="btn sm" onclick="playAudio()">▶ Play the survey report</button>'+
+        '<button class="btn alt sm" onclick="stopAudio()">■ Stop</button>'+
+        '<span style="font-size:14px;color:var(--muted)">Plays used: <b id="plays">'+STATE.plays+'</b></span></div>'+
+        listenTable(q.listen);
+  } else if(q.spk){ ctx=SPEAKERS; }
+  $("qCtx").innerHTML=ctx;
+
+  // body
+  if(q.type==="mcq"){
+    $("qBody").innerHTML=q.o.map((o,i)=>
+      '<button class="opt" data-i="'+i+'" onclick="pick(this)"><span class="lt">'+"ABCDE"[i]+'</span>'+o+'</button>').join("");
+  } else if(q.type==="multi"){
+    $("qBody").innerHTML=q.o.map((o,i)=>
+      '<button class="opt" data-i="'+i+'" onclick="pickMulti(this)"><span class="lt">'+"ABCDE"[i]+'</span>'+o+'</button>').join("")+
+      '<div style="font-size:14.5px;color:var(--muted);margin-top:6px">Select exactly '+q.n+' answers.</div>';
+  } else {
+    $("qBody").innerHTML='<input type="text" id="ansIn" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="Type your answer">';
+    $("ansIn").addEventListener("keydown",e=>{if(e.key==="Enter"){e.preventDefault();$("btnCheck").classList.contains("hide")?nextQ():checkAnswer();}});
+    setTimeout(()=>{const el=$("ansIn"); if(el) el.focus();},60);
+  }
+  updateBar();
+}
+
+let picked=null, pickedMulti=[];
+function pick(btn){
+  if(btn.disabled) return;
+  document.querySelectorAll("#qBody .opt").forEach(b=>b.classList.remove("sel"));
+  btn.classList.add("sel"); picked=+btn.dataset.i;
+}
+function pickMulti(btn){
+  if(btn.disabled) return;
+  const i=+btn.dataset.i, at=pickedMulti.indexOf(i);
+  if(at>-1){pickedMulti.splice(at,1);btn.classList.remove("sel");}
+  else{
+    if(pickedMulti.length>=Q[STATE.i].n){
+      toastMsg("You can only choose "+Q[STATE.i].n+". Tap one again to remove it."); return;
+    }
+    pickedMulti.push(i); btn.classList.add("sel");
+  }
+}
+function toastMsg(m){
+  const d=document.createElement("div");
+  d.textContent=m;
+  d.style.cssText="position:fixed;left:50%;bottom:24px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:11px 18px;border-radius:10px;z-index:200;font-size:15px;max-width:90%";
+  document.body.appendChild(d); setTimeout(()=>d.remove(),2600);
+}
+
+function useHint(){
+  const q=Q[STATE.i];
+  if(STATE.hinted.includes(STATE.i)) return;
+  STATE.hinted.push(STATE.i);
+  STATE.pts=Math.max(0,STATE.pts-3);
+  $("qHint").innerHTML='<div class="hintbox"><b>Hint:</b> '+q.h+'</div>';
+  $("btnHint").disabled=true;
+  updateBar();
+}
+
+function checkAnswer(){
+  const q=Q[STATE.i];
+  let ok=false, given="";
+
+  if(q.type==="mcq"){
+    if(picked===null){toastMsg("Choose an answer first.");return;}
+    ok = picked===q.a; given=q.o[picked];
+    document.querySelectorAll("#qBody .opt").forEach(b=>{
+      const i=+b.dataset.i; b.disabled=true; b.classList.remove("sel");
+      if(i===q.a) b.classList.add("right");
+      else if(i===picked) b.classList.add("wrong");
+    });
+  } else if(q.type==="multi"){
+    if(pickedMulti.length!==q.n){toastMsg("Choose exactly "+q.n+" answers.");return;}
+    ok = q.a.every(x=>pickedMulti.includes(x));
+    given = pickedMulti.slice().sort().map(i=>"ABCDE"[i]).join(" + ");
+    document.querySelectorAll("#qBody .opt").forEach(b=>{
+      const i=+b.dataset.i; b.disabled=true; b.classList.remove("sel");
+      if(q.a.includes(i)) b.classList.add("right");
+      else if(pickedMulti.includes(i)) b.classList.add("wrong");
+    });
+  } else {
+    const v=$("ansIn").value;
+    if(!v.trim()){toastMsg("Type an answer first.");return;}
+    given=v.trim();
+    ok = q.acc.some(a=>norm(a)===norm(v));
+    $("ansIn").disabled=true;
+    $("ansIn").style.borderColor = ok ? "var(--green)" : "var(--coral)";
+  }
+
+  STATE.answers[STATE.i]={given:given,correct:ok};
+  if(ok){
+    STATE.correct++; STATE.streak++;
+    let add=10; if(STATE.streak>0 && STATE.streak%5===0){add+=5; toastMsg("🔥 "+STATE.streak+" in a row — bonus 5 points!");}
+    STATE.pts+=add;
+    $("qFb").innerHTML='<div class="fb ok"><b>Correct — +'+add+' points</b>'+q.e+'</div>';
+  } else {
+    STATE.streak=0;
+    const right = q.type==="text" ? q.a : (q.type==="multi" ? q.a.map(i=>"ABCDE"[i]+" ("+q.o[i]+")").join(" and ") : "ABCDE"[q.a]+" — "+q.o[q.a]);
+    $("qFb").innerHTML='<div class="fb no"><b>Not this time. The answer is: '+right+'</b>'+q.e+'</div>';
+  }
+
+  // refresh the listening table so the finished gap shows
+  if(q.listen!==undefined){
+    const holder=$("qCtx").querySelector(".ctx");
+    if(holder) holder.outerHTML=listenTable(-1);
+  }
+
+  checkBadges();
+  $("btnCheck").classList.add("hide");
+  $("btnNext").classList.remove("hide");
+  $("btnHint").classList.add("hide");
+  picked=null; pickedMulti=[];
+  updateBar();
+  $("btnNext").focus();
+}
+
+const BADGES=[
+ {id:"first",t:"First Word",c:s=>s.correct>=1},
+ {id:"ten",t:"Ten Up",c:s=>s.correct>=10},
+ {id:"half",t:"Halfway There",c:s=>s.i>=25},
+ {id:"ear",t:"Good Ear",c:s=>{let n=0;for(let k=LISTEN_START;k<LISTEN_START+7;k++){if(s.answers[k]&&s.answers[k].correct)n++;}return n>=6;}},
+ {id:"family",t:"Word Family Expert",c:s=>{let n=0;Q.forEach((q,k)=>{if(q.s===1&&s.answers[k]&&s.answers[k].correct)n++;});return n>=7;}},
+ {id:"streak",t:"On Fire",c:s=>s.streak>=8},
+ {id:"forty",t:"Forty Right",c:s=>s.correct>=40}
+];
+function checkBadges(){
+  BADGES.forEach(b=>{
+    if(!STATE.badges.includes(b.id)&&b.c(STATE)){
+      STATE.badges.push(b.id);
+      toastMsg("🏅 Badge unlocked: "+b.t);
+    }
+  });
+}
+
+function nextQ(){
+  stopAudio();
+  STATE.i++;
+  if(STATE.i>=Q.length){ finish(); return; }
+  renderQ();
+}
+
+/* ---------- audio ---------- */
+function playAudio(){
+  if(!("speechSynthesis" in window)){toastMsg("Your browser cannot play this audio. Read the script in the feedback instead.");return;}
+  window.speechSynthesis.cancel();
+  const u=new SpeechSynthesisUtterance(LISTEN_SCRIPT);
+  u.rate=.88; u.pitch=1; u.lang="en-GB";
+  window.speechSynthesis.speak(u);
+  STATE.plays++;
+  const p=$("plays"); if(p) p.textContent=STATE.plays;
+}
+function stopAudio(){ if("speechSynthesis" in window) window.speechSynthesis.cancel(); }
+
+/* ============================================================
+   RESULTS
+   ============================================================ */
+function finish(){
+  STATE.done=true;
+  const pct=Math.round(STATE.correct/Q.length*100);
+  $("pbar").style.width="100%";
+  $("rScore").textContent=pct+"%";
+  $("rRaw").textContent=STATE.correct+" out of "+Q.length+" correct";
+  $("rPts").textContent=STATE.pts+" points · "+STATE.badges.length+" badges · "+STATE.hinted.length+" hints used";
+
+  let emoji,msg;
+  if(pct>=90){emoji="🏆";msg="Outstanding. This vocabulary is ready for the exam.";}
+  else if(pct>=80){emoji="🎉";msg="Strong work — you have earned your certificate.";}
+  else if(pct>=65){emoji="👍";msg="A good result. Review the weak sections below and try again.";}
+  else if(pct>=50){emoji="📚";msg="You know about half of this list. Study the word cards, then come back.";}
+  else{emoji="🔁";msg="Start with the 40 word cards. Learn them, then take the quiz again.";}
+  $("rEmoji").textContent=emoji; $("rMsg").textContent=msg;
+
+  // section breakdown
+  const rows=SECTIONS.map((name,si)=>{
+    let tot=0,got=0;
+    Q.forEach((q,k)=>{if(q.s===si){tot++;if(STATE.answers[k]&&STATE.answers[k].correct)got++;}});
+    const p=Math.round(got/tot*100);
+    return '<tr><td style="width:44%">'+name+'</td><td style="width:15%"><b>'+got+'/'+tot+'</b></td>'+
+      '<td><div class="meter"><i style="width:'+p+'%;background:'+(p>=80?"var(--green)":p>=50?"var(--signal)":"var(--coral)")+'"></i></div></td></tr>';
+  }).join("");
+  $("rBreak").innerHTML=rows;
+
+  // certificate
+  if(pct>=80){
+    $("rCert").innerHTML='<div class="cert"><div class="seal">🏅</div>'+
+      '<div style="letter-spacing:2px;color:var(--teal);font-weight:700;font-size:14px">Higher Colleges of Technology · Abu Dhabi</div>'+
+      '<h2>Certificate of Achievement</h2><p style="margin:0;color:var(--muted)">This certifies that</p>'+
+      '<div class="nm">'+escapeHtml(STATE.name)+'</div>'+
+      '<p style="max-width:46ch;margin:8px auto">has successfully completed the <b>B1+ Vocabulary List 3 (Fall): Communication</b> quiz, '+
+      'scoring <b>'+pct+'%</b> ('+STATE.correct+'/'+Q.length+') across all eight sections.</p>'+
+      '<p style="color:var(--muted);font-size:15px">'+new Date().toLocaleDateString("en-GB",{day:"numeric",month:"long",year:"numeric"})+'</p>'+
+      '<p style="font-style:italic;margin-top:18px">Designed by: Nazila Motahari</p>'+
+      '<button class="btn gold noprint" onclick="window.print()" style="margin-top:10px">Print / save the certificate</button></div>';
+    confetti();
+  } else {
+    $("rCert").innerHTML='<div class="note"><b>Certificate: not yet.</b> You need 80% (40 out of 50). '+
+      'You are '+(40-STATE.correct)+' question'+((40-STATE.correct)===1?"":"s")+' away. Review your answers, study the cards, and take it again.</div>';
+  }
+  show("vRes");
+}
+function escapeHtml(s){return (s||"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+
+function showReview(){
+  const html=SECTIONS.map((name,si)=>{
+    const items=Q.map((q,k)=>({q,k})).filter(x=>x.q.s===si).map(({q,k})=>{
+      const a=STATE.answers[k]||{given:"(no answer)",correct:false};
+      const right = q.type==="text" ? q.a : (q.type==="multi" ? q.a.map(i=>q.o[i]).join(" + ") : q.o[q.a]);
+      return '<div class="rev'+(a.correct?"":" bad")+'"><span class="tag">'+(a.correct?"Correct":"Wrong")+'</span> '+
+        '<b>Q'+(k+1)+'.</b> '+q.q+'<br><span style="color:var(--muted);font-size:15px">Your answer: '+escapeHtml(a.given)+
+        (a.correct?"":' &nbsp;·&nbsp; Correct answer: <b style="color:var(--green)">'+right+'</b>')+'</span>'+
+        '<div style="font-size:15px;margin-top:6px">'+q.e+'</div></div>';
+    }).join("");
+    return '<h3>'+name+'</h3>'+items;
+  }).join("");
+  $("rReview").innerHTML='<div class="card"><h2 style="margin-top:0">Every question, with the reason</h2>'+html+'</div>';
+  $("rReview").scrollIntoView({behavior:"smooth"});
+}
+
+/* ============================================================
+   SAVE / LOAD  (JSON file, not localStorage)
+   ============================================================ */
+function saveJSON(){
+  const pct=Math.round(STATE.correct/Q.length*100);
+  const data={
+    app:"B1+ Wordlist 3 (Communication) Vocabulary Quiz",
+    student:STATE.name,
+    date:new Date().toISOString(),
+    score:STATE.correct, outOf:Q.length, percent:pct,
+    points:STATE.pts, badges:STATE.badges, hintsUsed:STATE.hinted.length,
+    sections:SECTIONS.map((n,si)=>{
+      let tot=0,got=0; Q.forEach((q,k)=>{if(q.s===si){tot++;if(STATE.answers[k]&&STATE.answers[k].correct)got++;}});
+      return {section:n,correct:got,outOf:tot};
+    }),
+    answers:Q.map((q,k)=>({n:k+1,section:SECTIONS[q.s],question:q.q.replace(/<[^>]+>/g,""),
+      given:(STATE.answers[k]||{}).given||"",correct:!!(STATE.answers[k]||{}).correct})),
+    state:{i:STATE.i,pts:STATE.pts,correct:STATE.correct,badges:STATE.badges,answers:STATE.answers,hinted:STATE.hinted,done:STATE.done}
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="Wordlist3-Communication-"+(STATE.name||"student").replace(/\s+/g,"-")+".json";
+  a.click(); URL.revokeObjectURL(a.href);
+  toastMsg("Saved. Send this file to your teacher.");
+}
+function loadJSON(ev){
+  const f=ev.target.files[0]; if(!f) return;
+  const r=new FileReader();
+  r.onload=()=>{
+    try{
+      const d=JSON.parse(r.result);
+      if(!d.state) throw 0;
+      STATE.name=d.student||"Student";
+      Object.assign(STATE,d.state);
+      $("nm").value=STATE.name;
+      if(STATE.done){finish();}
+      else{show("vQuiz");renderQ();}
+      toastMsg("Progress restored for "+STATE.name+".");
+    }catch(e){ toastMsg("That file could not be read. Choose a file saved by this app."); }
+  };
+  r.readAsText(f);
+  ev.target.value="";
+}
+function resetAll(){
+  stopAudio();
+  Object.assign(STATE,{i:0,pts:0,correct:0,badges:[],answers:[],hinted:[],plays:0,streak:0,done:false});
+  $("rReview").innerHTML=""; $("rCert").innerHTML="";
+  updateBar(); show("vStart");
+}
+
+/* ---------- confetti ---------- */
+function confetti(){
+  const c=$("confetti"); c.classList.remove("hide");
+  const x=c.getContext("2d"); c.width=innerWidth; c.height=innerHeight;
+  const cols=["#F0A202","#1C7E8C","#D9544D","#2E7D57","#11505E"];
+  let bits=Array.from({length:130},()=>({x:Math.random()*c.width,y:-20-Math.random()*c.height,
+    w:6+Math.random()*7,h:8+Math.random()*9,c:cols[(Math.random()*cols.length)|0],
+    v:1.6+Math.random()*3,r:Math.random()*6,s:(Math.random()-.5)*.2}));
+  let t=0;
+  (function loop(){
+    t++; x.clearRect(0,0,c.width,c.height);
+    bits.forEach(b=>{b.y+=b.v;b.r+=b.s;
+      x.save();x.translate(b.x,b.y);x.rotate(b.r);x.fillStyle=b.c;x.fillRect(-b.w/2,-b.h/2,b.w,b.h);x.restore();});
+    if(t<300) requestAnimationFrame(loop); else {x.clearRect(0,0,c.width,c.height);c.classList.add("hide");}
+  })();
+}
+
+/* ---------- init ---------- */
+buildGloss(); updateBar();
+</script>
+</body>
+</html>
